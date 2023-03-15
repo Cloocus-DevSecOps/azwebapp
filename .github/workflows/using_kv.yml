@@ -2,7 +2,8 @@ name: Example key vault flow
 
 on:
   push:
-    branches: [ "main" ]
+    paths:
+      - ".github/workflows/using_kv.yml"
 jobs:
   build:
     runs-on: ubuntu-latest
