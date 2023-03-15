@@ -1,0 +1,23 @@
+    name: Example key vault flow
+
+    on: [push]
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+        # checkout the repo
+          - uses: actions/checkout@v3
+          - uses: Azure/login@v2
+            with:
+              creds: ${{ secrets.AZURE_CREDENTIALS }}
+          - uses: Azure/get-keyvault-secrets@v2
+            with: 
+              keyvault: "containervault-webapp"
+              secrets: 'containerPassword, containerUsername'
+              id: myGetSecretAction
+          - uses: azure/docker-login@v2
+            with:
+              login-server: ${{ steps.myGetSecretAction.outputs.containerUsername }}.azurecr.io
+              username: ${{ steps.myGetSecretAction.outputs.containerUsername }}
+              password: ${{ steps.myGetSecretAction.outputs.containerPassword }}
